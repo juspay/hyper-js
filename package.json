@@ -1,0 +1,43 @@
+{
+  "name": "@juspay-tech/hyper-js",
+  "version": "1.0.0",
+  "description": "A ReScript-based JavaScript library for dynamic script loading and HyperLoader initialization.",
+  "main": "index.js",
+  "module": "index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "npm run re:build && npm run build:es",
+    "re:build": "rescript",
+    "re:start": "rescript build -w",
+    "re:clean": "rescript clean",
+    "re:format": "rescript format -all",
+    "build:es": "node build.js",
+    "publish:public": "npm publish --access public"
+  },
+  "dependencies": {
+    "@rescript/core": "^0.7.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.18.17",
+    "rescript": "^11.1.0"
+  },
+  "keywords": [
+    "rescript",
+    "javascript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juspay/hyper-js.git"
+  },
+  "author": "Juspay Technologies",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/juspay/hyperswitch-web/issues"
+  },
+  "homepage": "https://github.com/juspay/hyperswitch-web"
+}
