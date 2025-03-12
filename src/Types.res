@@ -50,7 +50,7 @@ type hyperInstance = {
   widgets: JSON.t => element,
   paymentRequest: JSON.t => JSON.t,
 }
-type hyperInstanceMake = (string, option<JSON.t>, JSON.t) => hyperInstance
+type hyperInstanceMake = (JSON.t, option<JSON.t>, JSON.t) => hyperInstance
 
 let confirmPaymentFn = (_elements: JSON.t) => {
   Promise.resolve(Dict.make()->JSON.Encode.object)
