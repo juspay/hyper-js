@@ -63,23 +63,44 @@ declare module "@juspay-tech/hyper-js" {
 
   export interface LoadOptions {
     customBackendUrl?: string;
+    env?: "SANDBOX" | "PROD";
     [key: string]: any;
+  }
+
+  export interface HyperObject {
+    publishableKey?: string;
+    [key: string]: any;
+  }
+
+  export interface AnalyticsData {
+    sessionID: string;
+    timeStamp: string;
   }
 
   /**
    * Initializes the Hyper SDK with the given publishable key and options.
    *
-   * @param publishableKey - Your publishable API key
-   * @param options - Configuration options including customBackendUrl settings
+   * @param hyperObject - Either a string publishable key or an object containing publishableKey
+   * @param options - Configuration options including customBackendUrl and env settings
    * @returns A Promise that resolves to a HyperInstance object
    *
    * @example
+   * // Using string publishable key
    * const hyperPromise = loadHyper("YOUR_PUBLISHABLE_KEY", {
-   *   customBackendUrl: "YOUR_BACKEND_URL"
+   *   customBackendUrl: "YOUR_BACKEND_URL",
+   *   env: "SANDBOX"
+   * });
+   * 
+   * // Using object with publishable key
+   * const hyperPromise = loadHyper({
+   *   publishableKey: "YOUR_PUBLISHABLE_KEY"
+   * }, {
+   *   customBackendUrl: "YOUR_BACKEND_URL",
+   *   env: "PROD"
    * });
    */
   export function loadHyper(
-    publishableKey: string,
+    hyperObject: string | HyperObject,
     options?: LoadOptions
   ): Promise<HyperInstance>;
 
@@ -87,7 +108,7 @@ declare module "@juspay-tech/hyper-js" {
    * @deprecated Use loadHyper instead
    */
   export function loadStripe(
-    publishableKey: string,
+    hyperObject: string | HyperObject,
     options?: LoadOptions
   ): Promise<HyperInstance>;
 
