@@ -1,6 +1,15 @@
 open Types
 
-let loadHyper = (str, option: option<JSON.t>) => {
+let loadHyper = (hyperObject: JSON.t, option: option<JSON.t>) => {
+  let str = switch hyperObject->JSON.Classify.classify {
+  | String(val) => val
+  | Object(json) =>
+    json
+    ->Dict.get("publishableKey")
+    ->Option.flatMap(JSON.Decode.string)
+    ->Option.getOr("")
+  | _ => ""
+  }
   Promise.make((resolve, reject) => {
     let sessionID = generateSessionID()
     let timeStamp = Date.now()
@@ -24,7 +33,7 @@ let loadHyper = (str, option: option<JSON.t>) => {
       script->Window.src(scriptURL)
       script->Window.onload(() => {
         switch HyperJs.hyperInstance->Nullable.toOption {
-        | Some(instance) => resolve(instance(str, option, analyticsObj))
+        | Some(instance) => resolve(instance(hyperObject, option, analyticsObj))
         | None => ()
         }
       })
@@ -37,7 +46,7 @@ let loadHyper = (str, option: option<JSON.t>) => {
         `INTEGRATION WARNING: There is already an existing script tag for ${scriptURL}. Multiple additions of HyperLoader.js is not permitted, please add it on the top level only once.`,
       )
       switch HyperJs.hyperInstance->Nullable.toOption {
-      | Some(instance) => resolve(instance(str, option, analyticsObj))
+      | Some(instance) => resolve(instance(hyperObject, option, analyticsObj))
       | None => ()
       }
     }
