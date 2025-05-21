@@ -24,7 +24,7 @@
     "@rescript/core": "^0.7.0"
   },
   "devDependencies": {
-    "esbuild": "^0.18.17",
+    "esbuild": "^0.25.0",
     "rescript": "^11.1.0"
   },
   "keywords": [
