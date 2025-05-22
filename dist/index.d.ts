@@ -67,10 +67,12 @@ declare module "@juspay-tech/hyper-js" {
     [key: string]: any;
   }
 
-  export interface HyperObject {
-    publishableKey?: string;
-    [key: string]: any;
-  }
+  export type HyperObject =
+  | string
+  | {
+      publishableKey: string;
+      profileId: string;
+    };
 
   export interface AnalyticsData {
     sessionID: string;
@@ -80,7 +82,7 @@ declare module "@juspay-tech/hyper-js" {
   /**
    * Initializes the Hyper SDK with the given publishable key and options.
    *
-   * @param hyperObject - Either a string publishable key or an object containing publishableKey
+   * @param hyperObject - Either a string publishable key or an object containing publishableKey and profileId
    * @param options - Configuration options including customBackendUrl and env settings
    * @returns A Promise that resolves to a HyperInstance object
    *
@@ -93,14 +95,15 @@ declare module "@juspay-tech/hyper-js" {
    * 
    * // Using object with publishable key
    * const hyperPromise = loadHyper({
-   *   publishableKey: "YOUR_PUBLISHABLE_KEY"
+   *   publishableKey: "YOUR_PUBLISHABLE_KEY",
+   *   profileId: "YOUR_PROFILE_ID"
    * }, {
    *   customBackendUrl: "YOUR_BACKEND_URL",
    *   env: "PROD"
    * });
    */
   export function loadHyper(
-    hyperObject: string | HyperObject,
+    hyperObject: HyperObject,
     options?: LoadOptions
   ): Promise<HyperInstance>;
 
