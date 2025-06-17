@@ -1,6 +1,6 @@
 {
   "name": "@juspay-tech/hyper-js",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A ReScript-based JavaScript library for dynamic script loading and HyperLoader initialization.",
   "main": "index.js",
   "module": "index.mjs",
