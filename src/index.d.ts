@@ -1,6 +1,6 @@
 declare module "@juspay-tech/hyper-js" {
   // Event-related interfaces
-  interface EventData {
+  export interface EventData {
     iframeMounted: boolean;
     focusTriggered: boolean;
     blurTriggered: boolean;
@@ -10,20 +10,20 @@ declare module "@juspay-tech/hyper-js" {
     newClassType: string;
   }
 
-  interface Event {
+  export interface Event {
     key: string;
     data: EventData;
   }
 
-  type EventParam =
+  export type EventParam =
     | { type: "Event"; value: Event }
     | { type: "EventData"; value: EventData }
     | { type: "Empty" };
 
-  type EventHandler = (param: EventParam) => void;
+  export type EventHandler = (param: EventParam) => void;
 
   // Payment Element interfaces
-  interface PaymentElement {
+  export interface PaymentElement {
     on(eventName: string, handler: (param: EventParam) => void): void;
     collapse(): void;
     blur(): void;
@@ -35,7 +35,7 @@ declare module "@juspay-tech/hyper-js" {
     clear(): void;
   }
 
-  interface Element {
+  export interface Element {
     getElement(componentName: string): PaymentElement | null;
     update(options: object): void;
     fetchUpdates(): Promise<object>;
@@ -47,7 +47,7 @@ declare module "@juspay-tech/hyper-js" {
    * Type for the nested 'confirmParams' object within the payload,
    * reflecting only the 'return_url' field that is explicitly used.
    */
-  interface usedConfirmParamsFromPayload {
+  export interface usedConfirmParamsFromPayload {
     return_url?: string | null | undefined;
   }
 
@@ -55,12 +55,12 @@ declare module "@juspay-tech/hyper-js" {
    * Type for the main 'payload' object passed to confirmPaymentWrapper,
    * reflecting only the 'confirmParams' (for its 'return_url') and 'redirect' fields.
    */
-  interface confirmPaymentInputPayload {
+  export interface confirmPaymentInputPayload {
     confirmParams?: usedConfirmParamsFromPayload | null | undefined;
     redirect?: string | null | undefined; // Expected values like "if_required" or "always"
   }
 
-  interface HyperInstance {
+  export interface HyperInstance {
     confirmPayment(params: confirmPaymentInputPayload): Promise<object>;
     elements(options: ElementsOptions): Element;
     confirmCardPayment(
@@ -73,20 +73,20 @@ declare module "@juspay-tech/hyper-js" {
     paymentRequest(options: object): object;
   }
 
-  interface LoadOptions {
+  export interface LoadOptions {
     customBackendUrl?: string;
     env?: "SANDBOX" | "PROD";
     [key: string]: any;
   }
 
-  type HyperObject =
+  export type HyperObject =
     | string
     | {
         publishableKey: string;
         profileId: string;
       };
 
-  interface AnalyticsData {
+  export interface AnalyticsData {
     sessionID: string;
     timeStamp: string;
   }
@@ -94,12 +94,12 @@ declare module "@juspay-tech/hyper-js" {
   /**
    * Represents the possible values for the labels
    */
-  type AppearanceLabels = "Above" | "Floating" | "Never" | string;
+  export type AppearanceLabels = "Above" | "Floating" | "Never" | string;
 
   /**
    * Represents the possible values for the theme
    */
-  type AppearanceTheme =
+  export type AppearanceTheme =
     | "default"
     | "midnight"
     | "brutal"
@@ -112,7 +112,7 @@ declare module "@juspay-tech/hyper-js" {
   /**
    * Represents the structure of the 'variables' object, based on src/DefaultTheme.res
    */
-  interface AppearanceVariables {
+  export interface AppearanceVariables {
     /**
      * The font family
      */
@@ -316,26 +316,26 @@ declare module "@juspay-tech/hyper-js" {
   /**
    * Value of a single CSS rule (e.g., {"border": "1px solid #ccc"})
    */
-  interface AppearanceRuleValue {
+  export interface AppearanceRuleValue {
     [key: string]: string;
   }
 
   /**
    * The 'rules' object (e.g., {".Input": {"borderColor": "#000"})
    */
-  interface AppearanceRules {
+  export interface AppearanceRules {
     [key: string]: AppearanceRuleValue;
   }
 
   /**
    * src/Types/CardThemeType.res defines 'innerLayout' as: Spaced | Compressed
    */
-  type AppearanceInnerLayout = "Spaced" | "Compressed" | string; // For flexibility
+  export type AppearanceInnerLayout = "Spaced" | "Compressed" | string; // For flexibility
 
   /**
    * The complete type for the 'appearance' object within elementsOptions
    */
-  interface ElementsAppearanceOptions {
+  export interface ElementsAppearanceOptions {
     /**
      * The theme
      */
@@ -361,7 +361,7 @@ declare module "@juspay-tech/hyper-js" {
   /**
    * Based on src/Types/CardThemeType.res 'fonts' type
    */
-  interface ElementsFontOptions {
+  export interface ElementsFontOptions {
     /**
      * The CSS source
      */
@@ -384,12 +384,12 @@ declare module "@juspay-tech/hyper-js" {
    * src/Types/CardThemeType.res defines 'showLoader' as: Auto | Always | Never
    * This corresponds to the 'loader' field in elementsOptions.
    */
-  type ElementsLoaderOption = "auto" | "always" | "never" | string; // For flexibility if other string values are used
+  export type ElementsLoaderOption = "auto" | "always" | "never" | string; // For flexibility if other string values are used
 
   /**
    * The final, consolidated type for the 'elementsOptions' JSON object
    */
-  interface ElementsOptions {
+  export interface ElementsOptions {
     /**
      * The client secret
      */
@@ -428,7 +428,7 @@ declare module "@juspay-tech/hyper-js" {
   /**
    * Type for the 'newOptions' parameter of the 'update' function
    */
-  interface ElementsUpdateOptions {
+  export interface ElementsUpdateOptions {
     clientSecret?: string | null;
     appearance?: ElementsAppearanceOptions | null;
     locale?: string | null;
@@ -458,7 +458,7 @@ declare module "@juspay-tech/hyper-js" {
    *   env: "PROD"
    * });
    */
-  function loadHyper(
+  export function loadHyper(
     hyperObject: HyperObject,
     options?: LoadOptions
   ): Promise<HyperInstance>;
@@ -466,7 +466,7 @@ declare module "@juspay-tech/hyper-js" {
   /**
    * @deprecated Use loadHyper instead
    */
-  function loadStripe(
+  export function loadStripe(
     hyperObject: string | HyperObject,
     options?: LoadOptions
   ): Promise<HyperInstance>;
