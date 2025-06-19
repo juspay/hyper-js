@@ -445,12 +445,27 @@ declare module "@juspay-tech/hyper-js" {
   }
 
   /**
+   * Represents the details of the online acceptance method.
+   */
+  export interface CustomerAcceptanceOnlineDetails {
+    /** The user agent string of the browser used for acceptance. */
+    user_agent: string;
+    /** The IP address of the customer, if available. */
+    ip_address?: string | null;
+  }
+
+  /**
    * Represents customer acceptance details for a mandate.
-   * Placeholder: The exact structure needs to be defined based on backend API.
    */
   export interface CustomerAcceptance {
-    // Define properties based on actual CustomerAcceptance structure
-    [key: string]: any; // Placeholder for now
+    /** The type of acceptance (e.g., "online", "offline"). */
+    acceptance_type: "online" | "offline" | string;
+    /** The timestamp when the acceptance was recorded (ISO 8601 format). */
+    accepted_at: string;
+    /** Details specific to online acceptance. Present if 'acceptance_type' is 'online'. */
+    online?: CustomerAcceptanceOnlineDetails | null;
+    /** Placeholder for details specific to offline acceptance. */
+    offline?: { [key: string]: any } | null; // Define further if offline structure is known
   }
 
   /**
