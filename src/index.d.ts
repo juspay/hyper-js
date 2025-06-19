@@ -303,7 +303,7 @@ declare module "@juspay-tech/hyper-js" {
     /** The unique identifier for the mandate, if applicable. */
     mandate_id: string | null;
     /** Data related to the mandate. */
-    mandate_data: object | null;
+    mandate_data: MandateData | null;
     /** Indicates how the payment method should be set up for future usage (e.g., "off_session"). */
     setup_future_usage: string | null;
     /** Indicates if the payment is an off-session payment. */
@@ -444,17 +444,85 @@ declare module "@juspay-tech/hyper-js" {
     whole_connector_response: object | null;
   }
 
+  /**
+   * Represents customer acceptance details for a mandate.
+   * Placeholder: The exact structure needs to be defined based on backend API.
+   */
+  export interface CustomerAcceptance {
+    // Define properties based on actual CustomerAcceptance structure
+    [key: string]: any; // Placeholder for now
+  }
+
+  /**
+   * Represents the type of mandate.
+   * Placeholder: The exact structure needs to be defined based on backend API.
+   */
+  export interface MandateType {
+    // Define properties based on actual MandateType structure
+    [key: string]: any; // Placeholder for now
+  }
+
+  /**
+   * Represents data related to a mandate.
+   * This is used when creating or updating a mandate.
+   */
+  export interface MandateData {
+    /** A way to update the mandate's payment method details. The ID of the mandate to be updated. */
+    update_mandate_id?: string | null;
+    /** A consent from the customer to store the payment method. */
+    customer_acceptance?: CustomerAcceptance | null;
+    /** A way to select the type of mandate used. */
+    mandate_type?: MandateType | null;
+  }
+
+  /**
+   * Represents the error response of a payment confirmation.
+   * This is returned when the payment confirmation fails before a full payment response can be generated.
+   */
+  export interface ConfirmPaymentErrorResponse {
+    /** Indicates if the submission was initially successful before encountering an error. */
+    submitSuccessful: boolean;
+    /** Contains details about the error. */
+    error: {
+      /** The type of error that occurred (e.g., "validation_error"). */
+      type: string;
+      /** A descriptive message for the error. */
+      message: string;
+    };
+  }
+
+  /**
+   * Represents the successful response of retrieving a payment intent.
+   */
+  export interface RetrievePaymentIntentResponse {
+    /** Contains the payment intent details. */
+    paymentIntent: ConfirmPaymentResponse;
+  }
+
   export interface HyperInstance {
+    /**
+     * Confirms a payment with the given parameters.
+     * @param params - The payload for confirming the payment.
+     * @returns A Promise that resolves to either a ConfirmPaymentResponse on success
+     * or a ConfirmPaymentErrorResponse if an error occurs during the process.
+     */
     confirmPayment(
       params: confirmPaymentInputPayload
-    ): Promise<ConfirmPaymentResponse>;
+    ): Promise<ConfirmPaymentResponse | ConfirmPaymentErrorResponse>;
     elements(options: ElementsOptions): Element;
     confirmCardPayment(
       clientSecret: string,
       data?: object,
       options?: object
     ): Promise<object>;
-    retrievePaymentIntent(paymentIntentId: string): Promise<object>;
+    /**
+     * Retrieves a payment intent by its ID.
+     * @param paymentIntentId - The ID of the payment intent to retrieve.
+     * @returns A Promise that resolves to a RetrievePaymentIntentResponse object on success, or null if the retrieval fails.
+     */
+    retrievePaymentIntent(
+      paymentIntentId: string
+    ): Promise<RetrievePaymentIntentResponse | null>;
     widgets(options: ElementsOptions): Element;
     paymentRequest(options: object): object;
   }
