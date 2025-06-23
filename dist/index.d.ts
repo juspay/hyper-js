@@ -64,170 +64,6 @@ declare module "@juspay-tech/hyper-js" {
   }
 
   /**
-   * Represents the details of a customer.
-   */
-  export interface CustomerDetailsResponse {
-    /** The unique identifier for the customer. */
-    id: string | null;
-    /** The name of the customer. */
-    name: string | null;
-    /** The email address of the customer. */
-    email: string | null;
-    /** The phone number of the customer. */
-    phone: string | null;
-    /** The phone country code of the customer. */
-    phone_country_code: string | null;
-  }
-
-  /**
-   * Represents the response data for wallet payments.
-   */
-  export interface WalletDataResponse {
-    /** The issuer name of the wallet (e.g., "paypal", "gpay"). */
-    issuer_name?: string | null;
-    /** Allows for an empty object or other properties if the wallet data structure is not fully known or varies. */
-    [key: string]: any;
-  }
-
-  /**
-   * Represents the payment method data.
-   */
-  export interface PaymentMethodData {
-    /** Wallet-specific payment data. Can be an empty object or a structured WalletDataResponse. */
-    wallet?: WalletDataResponse | {};
-    /** Billing details associated with the payment method. */
-    billing?: BillingDetails | null;
-    /** Allows for other payment method types as keys, e.g., card, bank_transfer. */
-    [key: string]: any;
-  }
-
-  /**
-   * Represents a payment address.
-   */
-  export interface PaymentAddress {
-    /** City, district, suburb, town, or village. */
-    city: string | null;
-    /** Two-letter country code (ISO 3166-1 alpha-2). */
-    country: string | null;
-    /** Address line 1 (e.g., street, PO Box, or company name). */
-    line1: string | null;
-    /** Address line 2 (e.g., apartment, suite, unit, or building). */
-    line2: string | null;
-    /** Address line 3. */
-    line3: string | null;
-    /** ZIP or postal code. */
-    zip: string | null;
-    /** State, county, province, or region. */
-    state: string | null;
-    /** First name. */
-    first_name: string | null;
-    /** Last name. */
-    last_name: string | null;
-  }
-
-  /**
-   * Represents billing details for a payment.
-   */
-  export interface BillingDetails {
-    /** The billing address. */
-    address: PaymentAddress | null;
-    /** The billing phone number. */
-    phone: string | null;
-    /** The billing email address. */
-    email: string | null;
-  }
-
-  /**
-   * Represents secrets for session token data, typically used in 3DS or similar authentication flows.
-   */
-  export interface SessionTokenDataSecrets {
-    /** Information to display to the user. */
-    display: string;
-    /** Payment-related secret data. */
-    payment: string;
-  }
-
-  /**
-   * Represents session token data.
-   */
-  export interface SessionTokenData {
-    /** Secrets associated with the session token. */
-    secrets: SessionTokenDataSecrets;
-  }
-
-  /**
-   * Represents the total amount for a payment request.
-   */
-  export interface PaymentRequestDataTotal {
-    /** A human-readable description of the total amount. */
-    label: string;
-    /** The type of the total amount, if applicable. */
-    type: string | null;
-    /** The total amount as a string. */
-    amount: string;
-  }
-
-  /**
-   * Represents data for a payment request, often used with payment providers like Apple Pay or Google Pay.
-   */
-  export interface PaymentRequestData {
-    /** The two-letter country code (ISO 3166-1 alpha-2) for the payment request. */
-    country_code: string;
-    /** The three-letter ISO currency code. */
-    currency_code: string;
-    /** The total amount and label for the payment. */
-    total: PaymentRequestDataTotal;
-    /** The merchant's capabilities (e.g., "supports3DS"). */
-    merchant_capabilities: string[];
-    /** The payment networks supported by the merchant (e.g., "visa", "masterCard"). */
-    supported_networks: string[];
-    /** The merchant identifier, if applicable. */
-    merchant_identifier: string | null;
-  }
-
-  /**
-   * Represents the next SDK action to be performed.
-   */
-  export interface SdkNextAction {
-    /** The type of the next SDK action (e.g., "sync"). */
-    next_action: string;
-  }
-
-  /**
-   * Represents a session token, often used in third-party SDK integrations.
-   */
-  export interface SessionToken {
-    /** The name of the wallet provider (e.g., "apple_pay"). */
-    wallet_name: string;
-    /** Data associated with the session token. */
-    session_token_data: SessionTokenData;
-    /** Data for the payment request. */
-    payment_request_data: PaymentRequestData;
-    /** The connector used for this session. */
-    connector: string;
-    /** Indicates if the session token is delayed. */
-    delayed_session_token: boolean;
-    /** The next SDK action to be performed. */
-    sdk_next_action: SdkNextAction;
-    /** Connector-specific reference ID. */
-    connector_reference_id: string | null;
-    /** Public key for the connector SDK. */
-    connector_sdk_public_key: string | null;
-    /** Merchant ID for the connector. */
-    connector_merchant_id: string | null;
-  }
-
-  /**
-   * Represents the next action required for a payment.
-   */
-  export interface NextAction {
-    /** The type of the next action (e.g., "third_party_sdk_session_token"). */
-    type: string;
-    /** The session token details if the next action involves a third-party SDK. */
-    session_token: SessionToken;
-  }
-
-  /**
    * Represents browser information collected during a payment.
    */
   export interface BrowserInfo {
@@ -262,186 +98,530 @@ declare module "@juspay-tech/hyper-js" {
   }
 
   /**
+   * Represents Details of customer attached to the payment
+   */
+  export interface CustomerDetailsResponse {
+    /** The identifier for the customer. */
+    id?: string | null;
+    /** The customer's name */
+    name?: string | null;
+    /** The customer's email address */
+    email?: string | null;
+    /** The customer's phone number */
+    phone?: string | null;
+    /** The country code for the customer's phone number */
+    phone_country_code?: string | null;
+  }
+
+  /**
+   * Represents Details of refund attached to the payment
+   */
+  export interface RefundResponse {
+    /** Unique Identifier for the refund */
+    refund_id: string;
+    /** The payment id against which refund is initiated */
+    payment_id: string;
+    /** The refund amount, which should be less than or equal to the total payment amount. Amount for the payment in lowest denomination of the currency. (i.e) in cents for USD denomination, in paisa for INR denomination etc */
+    amount: number;
+    /** The three-letter ISO currency code */
+    currency: string;
+    /** The status of the refund */
+    status: string;
+    /** An arbitrary string attached to the object. Often useful for displaying to users and your customer support executive */
+    reason?: string | null;
+    /** You can specify up to 50 keys, with key names up to 40 characters long and values up to 500 characters long. Metadata is useful for storing additional, structured information on an object */
+    metadata?: any | null;
+    /** The error message */
+    error_message?: string | null;
+    /** The code for the error */
+    error_code?: string | null;
+    /** Error code unified across the connectors is received here if there was an error while calling connector */
+    unified_code?: string | null;
+    /** Error message unified across the connectors is received here if there was an error while calling connector */
+    unified_message?: string | null;
+    /** The timestamp at which refund is created */
+    created_at?: string | null;
+    /** The timestamp at which refund is updated */
+    updated_at?: string | null;
+    /** The connector used for the refund and the corresponding payment */
+    connector: string;
+    /** The id of business profile for this refund */
+    profile_id?: string | null;
+    /** The merchant_connector_id of the processor through which this payment went through */
+    merchant_connector_id?: string | null;
+    /** Split refund details */
+    split_refunds?: any | null;
+    /** Error code received from the issuer in case of failed refunds */
+    issuer_error_code?: string | null;
+    /** Error message received from the issuer in case of failed refunds */
+    issuer_error_message?: string | null;
+  }
+
+  /**
+   * Represents Details of dispute attached to the payment
+   */
+  export interface DisputeResponsePaymentsRetrieve {
+    /** The identifier for dispute */
+    dispute_id: string;
+    /** The stage of the dispute */
+    dispute_stage: string;
+    /** The status of the dispute */
+    dispute_status: string;
+    /** Status of the dispute sent by connector */
+    connector_status: string;
+    /** Dispute id sent by connector */
+    connector_dispute_id: string;
+    /** Reason of dispute sent by connector */
+    connector_reason?: string | null;
+    /** Reason code of dispute sent by connector */
+    connector_reason_code?: string | null;
+    /** Evidence deadline of dispute sent by connector */
+    challenge_required_by?: string | null;
+    /** Dispute created time sent by connector */
+    connector_created_at?: string | null;
+    /** Dispute updated time sent by connector */
+    connector_updated_at?: string | null;
+    /** Time at which dispute is received */
+    created_at: string;
+  }
+
+  /**
+   * Represents payment attempt attached to the payment
+   */
+  export interface PaymentAttemptResponse {
+    /** A unique identifier for this specific payment attempt. */
+    attempt_id: string;
+    /** Current status of the payment attempt. */
+    status: string;
+    /** The payment attempt amount. Amount for the payment in the lowest denomination of the currency (e.g., in cents for USD, in paisa for INR). */
+    amount: number;
+    /** The payment attempt tax amount. */
+    order_tax_amount?: number | null;
+    /** The currency of the payment attempt. */
+    currency?: string | null;
+    /** The name of the payment connector (e.g., 'stripe', 'adyen') used for this attempt. */
+    connector?: string | null;
+    /** A human-readable message from the connector explaining any error that occurred during this payment attempt. */
+    error_message?: string | null;
+    /** The payment method used for this attempt. */
+    payment_method?: string | null;
+    /** A unique identifier for a payment provided by the connector. */
+    connector_transaction_id?: string | null;
+    /** The capture method used for the payment attempt. */
+    capture_method?: string | null;
+    /** The authentication type used for the payment attempt. */
+    authentication_type?: string | null;
+    /** Time at which the payment attempt was created. */
+    created_at: string;
+    /** Time at which the payment attempt was last modified. */
+    modified_at: string;
+    /** The reason for cancellation if the payment was cancelled. */
+    cancellation_reason?: string | null;
+    /** The ID of the mandate associated with this payment attempt, if applicable (e.g., for recurring payments). */
+    mandate_id?: string | null;
+    /** The error code returned by the connector if this payment attempt failed. This code is specific to the connector. */
+    error_code?: string | null;
+    /** The payment token representing the saved payment method if a tokenized payment method was used for this attempt. */
+    payment_token?: string | null;
+    /** Additional data related to some connectors. */
+    connector_metadata?: any | null;
+    /** The payment experience used for the attempt. */
+    payment_experience?: string | null;
+    /** The type of payment method used. */
+    payment_method_type?: string | null;
+    /** The connector's own reference or transaction ID for this specific payment attempt. Useful for reconciliation with the connector. */
+    reference_id?: string | null;
+    /** (This field is not live yet) Error code unified across the connectors received if there was an error while calling the connector. */
+    unified_code?: string | null;
+    /** (This field is not live yet) Error message unified across the connectors received if there was an error while calling the connector. */
+    unified_message?: string | null;
+    /** Value passed in the X-CLIENT-SOURCE header during the payments confirm request by the client. */
+    client_source?: string | null;
+    /** Value passed in the X-CLIENT-VERSION header during the payments confirm request by the client. */
+    client_version?: string | null;
+  }
+
+  /**
+   * Represents Details of capture attached to the payment
+   */
+  export interface CaptureResponse {
+    /** A unique identifier for this specific capture operation. */
+    capture_id: string;
+    /** Current status of the capture operation. */
+    status: string; // Assuming CaptureStatus is an existing type
+    /** The capture amount. Amount for the payment in the lowest denomination of the currency (e.g., in cents for USD, in paisa for INR). */
+    amount: number;
+    /** The currency of the capture. */
+    currency?: string | null; // Assuming Currency is an existing type
+    /** The name of the payment connector that processed this capture. */
+    connector: string;
+    /** The ID of the payment attempt that was successfully authorized and subsequently captured by this operation. */
+    authorized_attempt_id: string;
+    /** A unique identifier for this capture provided by the connector. */
+    connector_capture_id?: string | null;
+    /** Sequence number of this capture, in the series of captures made for the parent attempt. */
+    capture_sequence: number;
+    /** A human-readable message from the connector explaining why this capture operation failed, if applicable. */
+    error_message?: string | null;
+    /** The error code returned by the connector if this capture operation failed. This code is connector-specific. */
+    error_code?: string | null;
+    /** A more detailed reason from the connector explaining the capture failure, if available. */
+    error_reason?: string | null;
+    /** The connector's own reference or transaction ID for this specific capture operation. Useful for reconciliation. */
+    reference_id?: string | null;
+  }
+
+  /**
+   * The maximum amount to be debited for the mandate transaction.
+   */
+  export interface MandateAmountData {
+    amount: number;
+    currency: string;
+    /** Specifying start date of the mandate. */
+    start_date?: string | null;
+    /** Specifying end date of the mandate. */
+    end_date?: string | null;
+    /** Additional details required by mandate. */
+    metadata?: string | null;
+  }
+
+  /**
+   * Represents a single-use mandate type.
+   */
+  export interface MandateTypeSingleUse {
+    single_use: MandateAmountData;
+  }
+
+  /**
+   * Represents a multi-use mandate type.
+   */
+  export interface MandateTypeMultiUse {
+    multi_use: MandateAmountData | null;
+  }
+
+  /**
+   * Represents the type of mandate, either single-use or multi-use.
+   */
+  export type MandateType = MandateTypeSingleUse | MandateTypeMultiUse;
+
+  export interface MandateData {
+    /** A way to update the mandate's payment method details. */
+    update_mandate_id?: string | null;
+    /** Details about the customer's acceptance of the mandate. */
+    customer_acceptance?: CustomerAcceptance | null; // Assuming CustomerAcceptance is an existing type
+    /** The type of mandate. */
+    mandate_type?: MandateType | null; // Assuming MandateType is an existing type
+  }
+
+  /**
+   * Represents a payment address.
+   */
+  export interface Address {
+    /** Details of the address. */
+    address?: AddressDetails | null;
+    /** Details of the phone number. */
+    phone?: PhoneDetails | null;
+    /** The email address. */
+    email?: string | null;
+  }
+
+  /**
+   * Represents billing/shipping details for a payment
+   */
+  export interface AddressDetails {
+    /** The city, district, suburb, town, or village of the address. */
+    city?: string | null;
+    /** The country of the address in Alpha-2 format. */
+    country?: string | null; // Assuming CountryAlpha2 is an existing type
+    /** The first line of the street address or P.O. Box. */
+    line1?: string | null;
+    /** The second line of the street address or P.O. Box (e.g., apartment, suite, unit, or building). */
+    line2?: string | null;
+    /** The third line of the street address, if applicable. */
+    line3?: string | null;
+    /** The zip/postal code for the address. */
+    zip?: string | null;
+    /** The address state. */
+    state?: string | null;
+    /** The first name for the address. */
+    first_name?: string | null;
+    /** The last name for the address. */
+    last_name?: string | null;
+  }
+
+  /**
+   * Represents phone details for a payment
+   */
+  export interface PhoneDetails {
+    /** The contact number. */
+    number?: string | null;
+    /** The country code attached to the number. */
+    country_code?: string | null;
+  }
+
+  /**
+   * Represents order details with amount information.
+   */
+  export interface OrderDetailsWithAmount {
+    /** Name of the product that is being purchased. */
+    product_name: string;
+    /** The quantity of the product to be purchased. */
+    quantity: number;
+    /** The amount per quantity of product. */
+    amount: number;
+    /** Tax rate applicable to the product. */
+    tax_rate?: number | null;
+    /** Total tax amount applicable to the product. */
+    total_tax_amount?: number | null;
+    /** Indicates if the product requires shipping. */
+    requires_shipping?: boolean | null;
+    /** The image URL of the product. */
+    product_img_link?: string | null;
+    /** ID of the product that is being purchased. */
+    product_id?: string | null;
+    /** Category of the product that is being purchased. */
+    category?: string | null;
+    /** Sub category of the product that is being purchased. */
+    sub_category?: string | null;
+    /** Brand of the product that is being purchased. */
+    brand?: string | null;
+    /** The type of product. */
+    product_type?: string | null; // Assuming ProductType is an existing type
+    /** The tax code for the product. */
+    product_tax_code?: string | null;
+  }
+
+  /**
+   * Represents surcharge details for a payment.
+   */
+  export interface RequestSurchargeDetails {
+    /** The surcharge amount. */
+    surcharge_amount: number;
+    /** This Unit struct represents MinorUnit in which core amount works. */
+    tax_amount?: number | null;
+  }
+
+  /**
+   * Represents incremental authorization response
+   */
+  export interface IncrementalAuthorizationResponse {
+    /** The unique identifier of authorization. */
+    authorization_id: string;
+    /** Amount the authorization has been made for. */
+    amount: number;
+    /** The status of the authorization. */
+    status: string; // Assuming AuthorizationStatus is an existing type
+    /** Error code sent by the connector for authorization. */
+    error_code?: string | null;
+    /** Error message sent by the connector for authorization. */
+    error_message?: string | null;
+    /** This Unit struct represents MinorUnit in which core amount works. */
+    previously_authorized_amount: number;
+  }
+
+  /** Details of external authentication. */
+  export interface ExternalAuthenticationDetailsResponse {
+    /** The authentication flow used (e.g., decoupled authentication type). */
+    authentication_flow?: string | null; // Assuming DecoupledAuthenticationType is an existing type
+    /** Electronic Commerce Indicator (ECI). */
+    electronic_commerce_indicator?: string | null;
+    /** The status of the authentication. */
+    status: string; // Assuming AuthenticationStatus is an existing type
+    /** DS Transaction ID. */
+    ds_transaction_id?: string | null;
+    /** Message Version. */
+    version?: string | null;
+    /** Error Code. */
+    error_code?: string | null;
+    /** Error Message. */
+    error_message?: string | null;
+  }
+
+  /**
    * Represents the response of a payment confirmation.
    * This corresponds to the `PaymentsResponse` or `PaymentsIntentResponse` in the Rust backend.
    */
   export interface ConfirmPaymentResponse {
-    /** The unique identifier for the payment. */
+    /** Unique identifier for the payment. This ensures idempotency for multiple payments that have been done by a single merchant. */
     payment_id: string;
-    /** The unique identifier for the merchant. */
+    /** This is an identifier for the merchant account. This is inferred from the API key provided during the request */
     merchant_id: string;
-    /** The status of the payment (e.g., "requires_customer_action", "succeeded"). */
+    /** The status of the payment intent */
     status: string;
-    /** The total amount of the payment. */
+    /** The payment amount. Amount for the payment in lowest denomination of the currency. (i.e) in cents for USD denomination, in paisa for INR denomination etc., */
     amount: number;
-    /** The net amount of the payment after deductions. */
+    /** The payment net amount. net_amount = amount + surcharge_details.surcharge_amount + surcharge_details.tax_amount + shipping_cost + order_tax_amount, If no surcharge_details, shipping_cost, order_tax_amount, net_amount = amount */
     net_amount: number;
-    /** The shipping cost associated with the payment. */
-    shipping_cost: number | null;
-    /** The amount that can be captured for this payment. */
-    amount_capturable: number | null;
-    /** The amount that has been received for this payment. */
-    amount_received: number | null;
-    /** The payment connector used (e.g., "trustpay"). */
-    connector: string | null;
-    /** The client secret for the payment session. */
-    client_secret: string | null;
-    /** The timestamp when the payment was created. */
-    created: string | null;
-    /** The currency of the payment (e.g., "AUD"). */
+    /** The shipping cost for the payment. */
+    shipping_cost?: number | null;
+    /** The amount (in minor units) that can still be captured for this payment. This is relevant when `capture_method` is `manual`. Once fully captured, or if `capture_method` is `automatic` and payment succeeded, this will be 0. */
+    amount_capturable: number;
+    /** The total amount (in minor units) that has been captured for this payment. For `fauxpay` sandbox connector, this might reflect the authorized amount if `status` is `succeeded` even if `capture_method` was `manual`. */
+    amount_received?: number | null;
+    /** The name of the payment connector (e.g., 'stripe', 'adyen') that processed or is processing this payment. */
+    connector?: string | null;
+    /** A secret token unique to this payment intent. It is primarily used by client-side applications (e.g., Hyperswitch SDKs) to authenticate actions like confirming the payment or handling next actions. This secret should be handled carefully and not exposed publicly beyond its intended client-side use. */
+    client_secret?: string | null;
+    /** Timestamp indicating when this payment intent was created, in ISO 8601 format. */
+    created?: string | null;
+    /** The currency of the payment */
     currency: string;
-    /** The unique identifier for the customer. */
-    customer_id: string | null;
-    /** Customer details associated with the payment. */
-    customer: CustomerDetailsResponse | null;
-    /** A description for the payment. */
-    description: string | null;
-    /** A list of refunds associated with this payment. */
-    refunds: any[] | null;
-    /** A list of disputes associated with this payment. */
-    disputes: any[] | null;
-    /** The unique identifier for the mandate, if applicable. */
-    mandate_id: string | null;
-    /** Data related to the mandate. */
-    mandate_data: MandateData | null;
-    /** Indicates how the payment method should be set up for future usage (e.g., "off_session"). */
-    setup_future_usage: string | null;
-    /** Indicates if the payment is an off-session payment. */
-    off_session: boolean | null;
-    /** The timestamp when the payment should be captured. */
-    capture_on: string | null;
-    /** The capture method for the payment (e.g., "automatic", "manual"). */
-    capture_method: string | null;
-    /** The payment method used (e.g., "wallet", "card"). */
-    payment_method: string | null;
-    /** Data specific to the payment method used. */
-    payment_method_data: PaymentMethodData | null;
-    /** A token representing the payment method. */
-    payment_token: string | null;
-    /** Shipping details for the payment. */
-    shipping: PaymentAddress | null;
-    /** Billing details for the payment. */
-    billing: BillingDetails | null;
-    /** Details of the order associated with the payment. */
-    order_details: any[] | null;
-    /** The email address of the customer. */
-    email: string | null;
-    /** The name of the customer. */
-    name: string | null;
-    /** The phone number of the customer. */
-    phone: string | null;
-    /** The URL to redirect the customer to after the payment. */
-    return_url: string | null;
-    /** The type of authentication used for the payment (e.g., "three_ds"). */
-    authentication_type: string | null;
-    /** The name to appear on the customer's statement. */
-    statement_descriptor_name: string | null;
-    /** An additional suffix for the statement descriptor. */
-    statement_descriptor_suffix: string | null;
-    /** The next action required for the payment. */
-    next_action: NextAction | null;
-    /** The reason for payment cancellation, if applicable. */
-    cancellation_reason: string | null;
-    /** The error code, if the payment failed. */
-    error_code: string | null;
-    /** The error message, if the payment failed. */
-    error_message: string | null;
-    /** A unified error code. */
-    unified_code: string | null;
-    /** A unified error message. */
-    unified_message: string | null;
-    /** The payment experience type. */
-    payment_experience: string | null;
-    /** The type of payment method used (e.g., "apple_pay"). */
-    payment_method_type: string | null;
-    /** The label for the payment connector. */
-    connector_label: string | null;
-    /** The business country of the merchant. */
-    business_country: string | null;
-    /** The business label of the merchant. */
-    business_label: string | null;
-    /** A sub-label for the business. */
-    business_sub_label: string | null;
-    /** A list of allowed payment method types. */
-    allowed_payment_method_types: string[] | null;
-    /** An ephemeral key for the payment session. */
-    ephemeral_key: object | null;
-    /** Indicates if manual retry is allowed for the payment. */
-    manual_retry_allowed: boolean | null;
-    /** The transaction ID from the connector. */
-    connector_transaction_id: string | null;
-    /** A message from the fraud management system. */
-    frm_message: object | null;
-    /** Metadata associated with the payment. */
-    metadata: object | null;
-    /** Metadata from the connector. */
-    connector_metadata: object | null;
-    /** Metadata related to specific features. */
-    feature_metadata: object | null;
-    /** A reference ID for the payment. */
-    reference_id: string | null;
-    /** A link to the payment page, if applicable. */
-    payment_link: string | null;
-    /** The profile ID associated with the payment. */
-    profile_id: string | null;
-    /** Details of any surcharge applied to the payment. */
-    surcharge_details: object | null;
-    /** The number of attempts made for this payment. */
-    attempt_count: number | null;
-    /** The merchant's decision regarding the payment. */
-    merchant_decision: string | null;
-    /** The merchant's connector ID. */
-    merchant_connector_id: string | null;
-    /** Indicates if incremental authorization is allowed. */
-    incremental_authorization_allowed: boolean | null;
-    /** The count of authorizations. */
-    authorization_count: number | null;
-    /** A list of incremental authorizations. */
-    incremental_authorizations: any[] | null;
-    /** Details of external authentication. */
-    external_authentication_details: object | null;
-    /** Indicates if external 3DS authentication was attempted. */
-    external_3ds_authentication_attempted: boolean | null;
-    /** The timestamp when the payment expires. */
-    expires_on: string | null;
-    /** A browser fingerprint. */
-    fingerprint: string | null;
-    /** Information about the customer's browser. */
-    browser_info: BrowserInfo | null;
-    /** The ID of the payment method used. */
-    payment_method_id: string | null;
-    /** The status of the payment method. */
-    payment_method_status: string | null;
-    /** The timestamp when the payment was last updated. */
-    updated: string | null;
-    /** Details of split payments, if applicable. */
-    split_payments: any[] | null;
-    /** Metadata from the fraud management system. */
-    frm_metadata: object | null;
-    /** Indicates if extended authorization was applied. */
-    extended_authorization_applied: boolean | null;
-    /** The timestamp before which the payment must be captured. */
-    capture_before: string | null;
-    /** The merchant's order reference ID. */
-    merchant_order_reference_id: string | null;
-    /** The tax amount for the order. */
-    order_tax_amount: number | null;
-    /** The connector's mandate ID. */
-    connector_mandate_id: string | null;
-    /** Information from card discovery. */
-    card_discovery: object | null;
-    /** Indicates if 3DS challenge is forced. */
-    force_3ds_challenge: boolean | null;
-    /** Indicates if 3DS challenge trigger is forced. */
-    force_3ds_challenge_trigger: boolean | null;
-    /** The error code from the issuer. */
-    issuer_error_code: string | null;
-    /** The error message from the issuer. */
-    issuer_error_message: string | null;
-    /** Indicates if iframe redirection is enabled. */
-    is_iframe_redirection_enabled: boolean | null;
-    /** The whole connector response. */
-    whole_connector_response: object | null;
+    /** The identifier for the customer object. If not provided the customer ID will be autogenerated. This field will be deprecated soon. Please refer to `customer.id` */
+    customer_id?: string | null;
+    /** Customer details response object */
+    customer?: CustomerDetailsResponse | null;
+    /** An arbitrary string providing a description for the payment, often useful for display or internal record-keeping. */
+    description?: string | null;
+    /** An array of refund objects associated with this payment. Empty or null if no refunds have been processed. */
+    refunds?: Array<RefundResponse> | null;
+    /** List of disputes that happened on this intent */
+    disputes?: Array<DisputeResponsePaymentsRetrieve> | null;
+    /** List of attempts that happened on this intent */
+    attempts?: Array<PaymentAttemptResponse> | null;
+    /** List of captures done on latest attempt */
+    captures?: Array<CaptureResponse> | null;
+    /** A unique identifier to link the payment to a mandate, can be used instead of payment_method_data, in case of setting up recurring payments */
+    mandate_id?: string | null;
+    /** Mandate data object */
+    mandate_data?: MandateData | null;
+    /** Setup future usage configuration */
+    setup_future_usage?: string | null;
+    /** Set to true to indicate that the customer is not in your checkout flow during this payment, and therefore is unable to authenticate. This parameter is intended for scenarios where you collect card details and charge them later. This parameter can only be used with confirm=true. */
+    off_session?: boolean | null;
+    /** A timestamp (ISO 8601 code) that determines when the payment should be captured. Providing this field will automatically set `capture` to true */
+    capture_on?: string | null;
+    /** The capture method for the payment */
+    capture_method?: string | null;
+    /** The payment method used for this payment */
+    payment_method: string;
+    /** Payment method data with billing information */
+    payment_method_data?: any | null;
+    /** Provide a reference to a stored payment method */
+    payment_token?: string | null;
+    /** Shipping address information */
+    shipping?: Address | null;
+    /** Billing address information */
+    billing?: Address | null;
+    /** Information about the product , quantity and amount for connectors. (e.g. Klarna) */
+    order_details?: Array<OrderDetailsWithAmount> | null;
+    /** The customer's email address This field will be deprecated soon. Please refer to `customer.email` object */
+    email?: string | null;
+    /** The customer's name This field will be deprecated soon. Please refer to `customer.name` object */
+    name?: string | null;
+    /** The customer's phone number This field will be deprecated soon. Please refer to `customer.phone` object */
+    phone?: string | null;
+    /** The URL to redirect after the completion of the operation */
+    return_url?: string | null;
+    /** The authentication type used for the payment */
+    authentication_type?: string | null;
+    /** For non-card charges, you can use this value as the complete description that appears on your customers' statements. Must contain at least one letter, maximum 22 characters. */
+    statement_descriptor_name?: string | null;
+    /** Provides information about a card payment that customers see on their statements. Concatenated with the prefix (shortened descriptor) or statement descriptor that's set on the account to form the complete statement descriptor. Maximum 255 characters for the concatenated descriptor. */
+    statement_descriptor_suffix?: string | null;
+    /** Next action data for the payment */
+    next_action?: any | null;
+    /** If the payment intent was cancelled, this field provides a textual reason for the cancellation (e.g., "requested_by_customer", "abandoned"). */
+    cancellation_reason?: string | null;
+    /** The connector-specific error code from the last failed payment attempt associated with this payment intent. */
+    error_code?: string | null;
+    /** A human-readable error message from the last failed payment attempt associated with this payment intent. */
+    error_message?: string | null;
+    /** error code unified across the connectors is received here if there was an error while calling connector */
+    unified_code?: string | null;
+    /** error message unified across the connectors is received here if there was an error while calling connector */
+    unified_message?: string | null;
+    /** The payment experience type */
+    payment_experience?: string | null;
+    /** The payment method type used */
+    payment_method_type?: string | null;
+    /** A label identifying the specific merchant connector account (MCA) used for this payment. This often combines the connector name, business country, and a custom label (e.g., "stripe_US_primary"). */
+    connector_label?: string | null;
+    /** The business country code */
+    business_country?: string | null;
+    /** The label identifying the specific business unit or profile under which this payment was processed by the merchant. */
+    business_label?: string | null;
+    /** An optional sub-label for further categorization of the business unit or profile used for this payment. */
+    business_sub_label?: string | null;
+    /** Allowed Payment Method Types for a given PaymentIntent */
+    allowed_payment_method_types?: Array<string> | null;
+    /** Ephemeral key create response */
+    ephemeral_key?: any | null;
+    /** If true the payment can be retried with same or different payment method which means the confirm call can be made again. */
+    manual_retry_allowed?: boolean | null;
+    /** A unique identifier for a payment provided by the connector */
+    connector_transaction_id?: string | null;
+    /** FRM message object */
+    frm_message?: any | null;
+    /** You can specify up to 50 keys, with key names up to 40 characters long and values up to 500 characters long. Metadata is useful for storing additional, structured information on an object. */
+    metadata?: any | null;
+    /** Connector metadata object */
+    connector_metadata?: any | null;
+    /** Feature metadata object */
+    feature_metadata?: any | null;
+    /** reference(Identifier) to the payment at connector side */
+    reference_id?: string | null;
+    /** Payment link response object */
+    payment_link?: any | null;
+    /** The business profile that is associated with this payment */
+    profile_id?: string | null;
+    /** Surcharge details object */
+    surcharge_details?: RequestSurchargeDetails | null;
+    /** Total number of attempts associated with this payment */
+    attempt_count: number;
+    /** Denotes the action(approve or reject) taken by merchant in case of manual review. Manual review can occur when the transaction is marked as risky by the frm_processor, payment processor or when there is underpayment/over payment incase of crypto payment */
+    merchant_decision?: string | null;
+    /** Identifier of the connector ( merchant connector account ) which was chosen to make the payment */
+    merchant_connector_id?: string | null;
+    /** If true, incremental authorization can be performed on this payment, in case the funds authorized initially fall short. */
+    incremental_authorization_allowed?: boolean | null;
+    /** Total number of authorizations happened in an incremental_authorization payment */
+    authorization_count?: number | null;
+    /** List of incremental authorizations happened to the payment */
+    incremental_authorizations?: Array<IncrementalAuthorizationResponse> | null;
+    /** External authentication details response */
+    external_authentication_details?: ExternalAuthenticationDetailsResponse | null;
+    /** Flag indicating if external 3ds authentication is made or not */
+    external_3ds_authentication_attempted?: boolean | null;
+    /** Date Time for expiry of the payment */
+    expires_on?: string | null;
+    /** Payment Fingerprint, to identify a particular card. It is a 20 character long alphanumeric code. */
+    fingerprint?: string | null;
+    /** Browser information object */
+    browser_info?: BrowserInfo | null;
+    /** A unique identifier for the payment method used in this payment. If the payment method was saved or tokenized, this ID can be used to reference it for future transactions or recurring payments. */
+    payment_method_id?: string | null;
+    /** The payment method status */
+    payment_method_status?: string | null;
+    /** Date time at which payment was updated */
+    updated?: string | null;
+    /** Split payments data */
+    split_payments?: any | null;
+    /** You can specify up to 50 keys, with key names up to 40 characters long and values up to 500 characters long. FRM Metadata is useful for storing additional, structured information on an object related to FRM. */
+    frm_metadata?: any | null;
+    /** flag that indicates if extended authorization is applied on this payment or not */
+    extended_authorization_applied?: boolean | null;
+    /** date and time after which this payment cannot be captured */
+    capture_before?: string | null;
+    /** Merchant's identifier for the payment/invoice. This will be sent to the connector if the connector provides support to accept multiple reference ids. In case the connector supports only one reference id, Hyperswitch's Payment ID will be sent as reference. */
+    merchant_order_reference_id?: string | null;
+    /** This Unit struct represents MinorUnit in which core amount works */
+    order_tax_amount?: number | null;
+    /** Connector Identifier for the payment method */
+    connector_mandate_id?: string | null;
+    /** Card discovery object */
+    card_discovery?: string | null;
+    /** Indicates if 3ds challenge is forced */
+    force_3ds_challenge?: boolean | null;
+    /** Indicates if 3ds challenge is triggered */
+    force_3ds_challenge_trigger?: boolean | null;
+    /** Error code received from the issuer in case of failed payments */
+    issuer_error_code?: string | null;
+    /** Error message received from the issuer in case of failed payments */
+    issuer_error_message?: string | null;
+    /** Indicates if the redirection has to open in the iframe */
+    is_iframe_redirection_enabled?: boolean | null;
+    /** Contains whole connector response */
+    whole_connector_response?: string | null;
   }
 
   /**
@@ -464,30 +644,6 @@ declare module "@juspay-tech/hyper-js" {
     accepted_at: string;
     /** Details specific to online acceptance. Present if 'acceptance_type' is 'online'. */
     online?: CustomerAcceptanceOnlineDetails | null;
-    /** Placeholder for details specific to offline acceptance. */
-    offline?: { [key: string]: any } | null; // Define further if offline structure is known
-  }
-
-  /**
-   * Represents the type of mandate.
-   * Placeholder: The exact structure needs to be defined based on backend API.
-   */
-  export interface MandateType {
-    // Define properties based on actual MandateType structure
-    [key: string]: any; // Placeholder for now
-  }
-
-  /**
-   * Represents data related to a mandate.
-   * This is used when creating or updating a mandate.
-   */
-  export interface MandateData {
-    /** A way to update the mandate's payment method details. The ID of the mandate to be updated. */
-    update_mandate_id?: string | null;
-    /** A consent from the customer to store the payment method. */
-    customer_acceptance?: CustomerAcceptance | null;
-    /** A way to select the type of mandate used. */
-    mandate_type?: MandateType | null;
   }
 
   /**
