@@ -13,13 +13,22 @@ let loadHyper = (hyperObject: JSON.t, option: option<JSON.t>) => {
   Promise.make((resolve, reject) => {
     let sessionID = generateSessionID()
     let timeStamp = Date.now()
-    let scriptURL = switch getEnv(option) {
-    | "SANDBOX" => "https://beta.hyperswitch.io/v1/HyperLoader.js"
-    | "PROD" => "https://checkout.hyperswitch.io/v0/HyperLoader.js"
-    | _ =>
-      str->String.startsWith("pk_prd_")
-        ? "https://checkout.hyperswitch.io/v0/HyperLoader.js"
-        : "https://beta.hyperswitch.io/v1/HyperLoader.js"
+    let scriptURL = {
+      let isFullUrl = str => str->String.startsWith("https://") || str->String.startsWith("http://")
+      switch true {
+      | _ when isFullUrl(str) => str
+      | _ =>
+        switch getEnv(option) {
+        | "SANDBOX" => "https://beta.hyperswitch.io/v1/HyperLoader.js"
+        | "PROD" => "https://checkout.hyperswitch.io/v0/HyperLoader.js"
+        | _ =>
+          if str->String.startsWith("pk_prd_") {
+            "https://checkout.hyperswitch.io/v0/HyperLoader.js"
+          } else {
+            "https://beta.hyperswitch.io/v1/HyperLoader.js"
+          }
+        }
+      }
     }
     let analyticsObj =
       [
