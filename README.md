@@ -74,6 +74,7 @@ loadStripe("YOUR_PUBLISHABLE_KEY", None);
 
 The script URL is determined based on your environment and key:
 
+- **Custom:** if you provide a URL starting with `http://` or `https://` it will be used directly.
 - **Sandbox:** `https://beta.hyperswitch.io/v1/HyperLoader.js`
 - **Production:** `https://checkout.hyperswitch.io/v0/HyperLoader.js`
 - **Fallback:** Determines based on the prefix of the provided key (`pk_prd_`).
