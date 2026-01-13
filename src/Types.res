@@ -160,6 +160,21 @@ let getEnv = option => {
   }
 }
 
+let getVersion = option => {
+  let dict = switch option {
+  | Some(json) => json->JSON.Decode.object->Option.getOr(Dict.make())
+  | None => Dict.make()
+  }
+  switch dict->Dict.get("version") {
+  | Some(val) =>
+    switch val->JSON.Decode.string {
+    | Some(str) => str
+    | None => ""
+    }
+  | None => ""
+  }
+}
+
 module HyperJs = {
   @val @scope("window")
   external hyperInstance: Nullable.t<hyperInstanceMake> = "Hyper"
