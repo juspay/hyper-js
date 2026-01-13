@@ -59,10 +59,6 @@ let confirmPaymentFn = (_elements: JSON.t) => {
   Promise.resolve(Dict.make()->JSON.Encode.object)
 }
 
-let confirmTokenizationFn = (_elements: JSON.t) => {
-  Promise.resolve(Dict.make()->JSON.Encode.object)
-}
-
 let confirmCardPaymentFn = (
   _clientSecretId: string,
   _data: option<JSON.t>,
@@ -119,7 +115,7 @@ let emptyHyperInstance = {
   paymentRequest: _ev => JSON.Encode.null,
   completeUpdateIntent: _ => Promise.resolve(Dict.make()->JSON.Encode.object),
   initiateUpdateIntent: _ => Promise.resolve(Dict.make()->JSON.Encode.object),
-  confirmTokenization: confirmTokenizationFn,
+  confirmTokenization: _ => Promise.resolve(Dict.make()->JSON.Encode.object),
 }
 
 type eventType = Escape | Change | Click | Ready | Focus | Blur | None
