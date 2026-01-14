@@ -149,7 +149,7 @@ let getEnv = option => {
   switch dict->Dict.get("env") {
   | Some(val) =>
     switch val->JSON.Decode.string {
-    | Some(str) => str
+    | Some(str) => str->String.toLowerCase
     | None => ""
     }
   | None => ""
@@ -164,7 +164,7 @@ let getVersion = option => {
   switch dict->Dict.get("version") {
   | Some(val) =>
     switch val->JSON.Decode.string {
-    | Some(str) => str
+    | Some(str) => str->String.toLowerCase
     | None => ""
     }
   | None => ""

@@ -15,14 +15,14 @@ let loadHyper = (hyperObject: JSON.t, option: option<JSON.t>) => {
     let timeStamp = Date.now()
     let version = getVersion(option)
     let scriptURL = switch (getEnv(option), version) {
-    | ("SANDBOX", "V1") => "https://beta.hyperswitch.io/v1/HyperLoader.js"
-    | ("PROD", "V1") => "https://checkout.hyperswitch.io/v0/HyperLoader.js"
-    | ("SANDBOX", "V2") => "https://beta.hyperswitch.io/v2/HyperLoader.js"
-    | ("PROD", "V2") => "https://checkout.hyperswitch.io/v2/HyperLoader.js"
-    | (_, "V2") =>
+    | ("sandbox", "v1") => "https://beta.hyperswitch.io/v1/HyperLoader.js"
+    | ("prod", "v1") => "https://checkout.hyperswitch.io/v0/HyperLoader.js"
+    | ("sandbox", "v2") => "https://beta.hyperswitch.io/v2/HyperLoader.js"
+    | ("prod", "v2") => "https://checkout.hyperswitch.io/v2/HyperLoader.js"
+    | (_, "v2") =>
       str->String.startsWith("pk_prd_")
         ? "https://checkout.hyperswitch.io/v2/HyperLoader.js"
-        : "https://beta.hyperswitch.io/v2/HyperLoader.js"
+        : "https://dev.hyperswitch.io/v2/HyperLoader.js"
     | _ =>
       str->String.startsWith("pk_prd_")
         ? "https://checkout.hyperswitch.io/v0/HyperLoader.js"
