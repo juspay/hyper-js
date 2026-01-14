@@ -22,7 +22,7 @@ let loadHyper = (hyperObject: JSON.t, option: option<JSON.t>) => {
     | (_, "v2") =>
       str->String.startsWith("pk_prd_")
         ? "https://checkout.hyperswitch.io/v2/HyperLoader.js"
-        : "https://dev.hyperswitch.io/v2/HyperLoader.js"
+        : "https://beta.hyperswitch.io/v2/HyperLoader.js"
     | _ =>
       str->String.startsWith("pk_prd_")
         ? "https://checkout.hyperswitch.io/v0/HyperLoader.js"
