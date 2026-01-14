@@ -13,9 +13,16 @@ let loadHyper = (hyperObject: JSON.t, option: option<JSON.t>) => {
   Promise.make((resolve, reject) => {
     let sessionID = generateSessionID()
     let timeStamp = Date.now()
-    let scriptURL = switch getEnv(option) {
-    | "SANDBOX" => "https://beta.hyperswitch.io/v1/HyperLoader.js"
-    | "PROD" => "https://checkout.hyperswitch.io/v0/HyperLoader.js"
+    let version = getVersion(option)
+    let scriptURL = switch (getEnv(option), version) {
+    | ("sandbox", "v1") => "https://beta.hyperswitch.io/v1/HyperLoader.js"
+    | ("prod", "v1") => "https://checkout.hyperswitch.io/v0/HyperLoader.js"
+    | ("sandbox", "v2") => "https://beta.hyperswitch.io/v2/HyperLoader.js"
+    | ("prod", "v2") => "https://checkout.hyperswitch.io/v2/HyperLoader.js"
+    | (_, "v2") =>
+      str->String.startsWith("pk_prd_")
+        ? "https://checkout.hyperswitch.io/v2/HyperLoader.js"
+        : "https://dev.hyperswitch.io/v2/HyperLoader.js"
     | _ =>
       str->String.startsWith("pk_prd_")
         ? "https://checkout.hyperswitch.io/v0/HyperLoader.js"
