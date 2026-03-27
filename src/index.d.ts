@@ -670,6 +670,33 @@ declare module "@juspay-tech/hyper-js" {
     paymentIntent: ConfirmPaymentResponse;
   }
 
+  /**
+   * Represents the result of getCustomerSavedPaymentMethods,
+   * providing methods to retrieve and confirm saved payment methods.
+   */
+  export interface GetCustomerSavedPaymentMethods {
+    /** Returns the customer's default saved payment method data. */
+    getCustomerDefaultSavedPaymentMethodData(): object;
+    /** Returns the customer's last used payment method data. */
+    getCustomerLastUsedPaymentMethodData(): object;
+    /** Confirms payment using the customer's default saved payment method. */
+    confirmWithCustomerDefaultPaymentMethod(
+      payload: confirmPaymentInputPayload
+    ): Promise<ConfirmPaymentResponse | ConfirmPaymentErrorResponse>;
+    /** Confirms payment using the customer's last used payment method. */
+    confirmWithLastUsedPaymentMethod(
+      payload: confirmPaymentInputPayload
+    ): Promise<ConfirmPaymentResponse | ConfirmPaymentErrorResponse>;
+  }
+
+  /**
+   * Represents a payment session initialized via initPaymentSession.
+   */
+  export interface InitPaymentSession {
+    /** Fetches the customer's saved payment methods and returns methods to confirm with them. */
+    getCustomerSavedPaymentMethods(): Promise<GetCustomerSavedPaymentMethods>;
+  }
+
   export interface HyperInstance {
     /**
      * Confirms a payment with the given parameters.
@@ -696,6 +723,8 @@ declare module "@juspay-tech/hyper-js" {
     ): Promise<RetrievePaymentIntentResponse | null>;
     widgets(options: ElementsOptions): Element;
     paymentRequest(options: object): object;
+    /** Initializes a payment session for saved payment method flows. */
+    initPaymentSession(options: ElementsOptions): InitPaymentSession;
   }
 
   export interface LoadOptions {

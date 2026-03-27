@@ -42,6 +42,17 @@ type confirmPaymentParams = {
   elements: JSON.t,
   confirmParams: Nullable.t<confirmParams>,
 }
+type getCustomerSavedPaymentMethods = {
+  getCustomerDefaultSavedPaymentMethodData: unit => JSON.t,
+  getCustomerLastUsedPaymentMethodData: unit => JSON.t,
+  confirmWithCustomerDefaultPaymentMethod: JSON.t => Promise.t<JSON.t>,
+  confirmWithLastUsedPaymentMethod: JSON.t => Promise.t<JSON.t>,
+}
+
+type initPaymentSession = {
+  getCustomerSavedPaymentMethods: unit => Promise.t<getCustomerSavedPaymentMethods>,
+}
+
 type hyperInstance = {
   confirmPayment: JSON.t => Promise.t<JSON.t>,
   elements: JSON.t => element,
@@ -52,6 +63,7 @@ type hyperInstance = {
   completeUpdateIntent: string => promise<JSON.t>,
   initiateUpdateIntent: unit => promise<JSON.t>,
   confirmTokenization: JSON.t => Promise.t<JSON.t>,
+  initPaymentSession: JSON.t => initPaymentSession,
 }
 type hyperInstanceMake = (JSON.t, option<JSON.t>, JSON.t) => hyperInstance
 
@@ -106,6 +118,17 @@ let emptyElement = {
   fetchUpdates,
   create,
 }
+let emptyGetCustomerSavedPaymentMethods = {
+  getCustomerDefaultSavedPaymentMethodData: () => Dict.make()->JSON.Encode.object,
+  getCustomerLastUsedPaymentMethodData: () => Dict.make()->JSON.Encode.object,
+  confirmWithCustomerDefaultPaymentMethod: _ => Promise.resolve(Dict.make()->JSON.Encode.object),
+  confirmWithLastUsedPaymentMethod: _ => Promise.resolve(Dict.make()->JSON.Encode.object),
+}
+
+let emptyInitPaymentSession = {
+  getCustomerSavedPaymentMethods: () => Promise.resolve(emptyGetCustomerSavedPaymentMethods),
+}
+
 let emptyHyperInstance = {
   confirmPayment: confirmPaymentFn,
   confirmCardPayment: confirmCardPaymentFn,
@@ -116,6 +139,7 @@ let emptyHyperInstance = {
   completeUpdateIntent: _ => Promise.resolve(Dict.make()->JSON.Encode.object),
   initiateUpdateIntent: _ => Promise.resolve(Dict.make()->JSON.Encode.object),
   confirmTokenization: _ => Promise.resolve(Dict.make()->JSON.Encode.object),
+  initPaymentSession: _ => emptyInitPaymentSession,
 }
 
 type eventType = Escape | Change | Click | Ready | Focus | Blur | None
