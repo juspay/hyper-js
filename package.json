@@ -25,7 +25,8 @@
   },
   "devDependencies": {
     "esbuild": "^0.25.0",
-    "rescript": "^11.1.0"
+    "rescript": "^11.1.0",
+    "typescript": "^6.0.2"
   },
   "keywords": [
     "rescript",

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "jsx": "react",
+    "paths": {
+      "@juspay-tech/hyper-js": ["./src/index.d.ts"]
+    }
+  },
+  "include": ["src/index.test-d.ts"]
+}
