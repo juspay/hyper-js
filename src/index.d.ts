@@ -1,30 +1,51 @@
 declare module "@juspay-tech/hyper-js" {
-  // Event-related interfaces
+  // Event name literal union (hyperswitch-web/Types.res:215-240)
+  export type EventName =
+    | "change"
+    | "ready"
+    | "focus"
+    | "blur"
+    | "escape"
+    | "clickTriggered"
+    | "completeDoThis"
+    | "confirmTriggered"
+    | "oneClickConfirmTriggered";
+
+  // Event data matching runtime (hyperswitch-web/Types.res:5-17)
   export interface EventData {
     iframeMounted: boolean;
-    focusTriggered: boolean;
-    blurTriggered: boolean;
+    focus: boolean;
+    blur: boolean;
+    ready: boolean;
     clickTriggered: boolean;
+    completeDoThis: boolean;
     elementType: string;
     classChange: boolean;
     newClassType: string;
+    confirmTriggered: boolean;
+    oneClickConfirmTriggered: boolean;
   }
 
-  export interface Event {
-    key: string;
-    data: EventData;
-  }
-
-  export type EventParam =
-    | { type: "Event"; value: Event }
-    | { type: "EventData"; value: EventData }
-    | { type: "Empty" };
-
-  export type EventHandler = (param: EventParam) => void;
+  // Component types (Elements.res:367-386)
+  export type ComponentType =
+    | "card"
+    | "cardNumber"
+    | "cardExpiry"
+    | "cardCvc"
+    | "payment"
+    | "paymentMethodCollect"
+    | "paymentMethodsManagement"
+    | "googlePay"
+    | "payPal"
+    | "applePay"
+    | "klarna"
+    | "expressCheckout"
+    | "paze"
+    | "samsungPay";
 
   // Payment Element interfaces
   export interface PaymentElement {
-    on(eventName: string, handler: (param: EventParam) => void): void;
+    on(eventName: EventName, handler?: ((data?: EventData) => void) | null): void;
     collapse(): void;
     blur(): void;
     update(options: ElementsUpdateOptions): void;
@@ -33,13 +54,15 @@ declare module "@juspay-tech/hyper-js" {
     mount(domElement: string): void;
     focus(): void;
     clear(): void;
+    /** Intercept SDK pay button click for custom validation/analytics before confirm */
+    onSDKHandleClick(handler?: (() => Promise<void>) | null): void;
   }
 
   export interface Element {
-    getElement(componentName: string): PaymentElement | null;
-    update(options: object): void;
+    getElement(componentName: ComponentType): PaymentElement | null;
+    update(options: ElementsUpdateOptions): void;
     fetchUpdates(): Promise<object>;
-    create(componentType: string, options: object): PaymentElement;
+    create(componentType: ComponentType, options?: object): PaymentElement;
   }
 
   // Main Hyper interfaces
@@ -670,6 +693,56 @@ declare module "@juspay-tech/hyper-js" {
     paymentIntent: ConfirmPaymentResponse;
   }
 
+  /** Saved payment method data for headless integration */
+  export interface GetCustomerSavedPaymentMethods {
+    getCustomerDefaultSavedPaymentMethodData(): any;
+    getCustomerLastUsedPaymentMethodData(): any;
+    confirmWithCustomerDefaultPaymentMethod(params: any): Promise<any>;
+    confirmWithLastUsedPaymentMethod(params: any): Promise<any>;
+  }
+
+  /** Headless payment session */
+  export interface InitPaymentSession {
+    getCustomerSavedPaymentMethods(): Promise<GetCustomerSavedPaymentMethods>;
+  }
+
+  /** Click-to-Pay customer presence input */
+  export interface IsCustomerPresentInput {
+    isCustomerPresent: boolean;
+  }
+
+  /** Click-to-Pay customer authentication input */
+  export interface ValidateCustomerAuthenticationInput {
+    otp: string;
+  }
+
+  /** Click-to-Pay checkout input */
+  export interface CheckoutWithCardInput {
+    srcDigitalCardId: string;
+    windowRef?: Window | null;
+  }
+
+  /** Click-to-Pay session methods */
+  export interface ClickToPaySession {
+    isCustomerPresent(input?: IsCustomerPresentInput | null): Promise<any>;
+    getUserType(): Promise<any>;
+    getRecognizedCards(): Promise<any>;
+    validateCustomerAuthentication(input: ValidateCustomerAuthenticationInput): Promise<any>;
+    checkoutWithCard(input: CheckoutWithCardInput): Promise<any>;
+    signOut(): Promise<any>;
+  }
+
+  /** Click-to-Pay session initializer input */
+  export interface InitClickToPaySessionInput {
+    request3DSAuthentication?: boolean;
+  }
+
+  /** Authentication session for Click-to-Pay */
+  export interface InitAuthenticationSession {
+    initClickToPaySession(input: InitClickToPaySessionInput): Promise<any>;
+    getActiveClickToPaySession(): Promise<any>;
+  }
+
   export interface HyperInstance {
     /**
      * Confirms a payment with the given parameters.
@@ -696,11 +769,45 @@ declare module "@juspay-tech/hyper-js" {
     ): Promise<RetrievePaymentIntentResponse | null>;
     widgets(options: ElementsOptions): Element;
     paymentRequest(options: object): object;
+
+    /** Confirm a one-click payment with saved payment method */
+    confirmOneClickPayment(payload: any, shouldHandleResult: boolean): Promise<any>;
+
+    /** Initialize headless payment session for saved methods */
+    initPaymentSession(options: any): InitPaymentSession;
+
+    /** Initialize Click-to-Pay authentication session */
+    initAuthenticationSession(options: any): InitAuthenticationSession;
+
+    /** Create payment methods management elements */
+    paymentMethodsManagementElements(options: ElementsOptions): Element;
+
+    /** Complete an update intent flow */
+    completeUpdateIntent(clientSecret: string): Promise<any>;
+
+    /** Initiate an update intent flow */
+    initiateUpdateIntent(): Promise<any>;
+
+    /** Confirm tokenization */
+    confirmTokenization(payload: any): Promise<any>;
   }
 
   export interface LoadOptions {
     customBackendUrl?: string;
     env?: "SANDBOX" | "PROD";
+    /** Preload SDK assets (default: true) */
+    isPreloadEnabled?: boolean;
+    /** Enable test mode */
+    isTestMode?: boolean;
+    /** Force re-initialization */
+    isForceInit?: boolean;
+    /** Custom redirection flags */
+    redirectionFlags?: {
+      shouldUseTopRedirection?: boolean;
+      shouldRemoveBeforeUnloadEvents?: boolean;
+    };
+    /** Analytics configuration */
+    analytics?: { metadata?: Record<string, string> };
     [key: string]: any;
   }
 
