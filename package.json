@@ -1,6 +1,6 @@
 {
   "name": "@juspay-tech/hyper-js",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A ReScript-based JavaScript library for dynamic script loading and HyperLoader initialization.",
   "main": "index.js",
   "module": "index.mjs",
@@ -12,20 +12,29 @@
     }
   },
   "scripts": {
+    "pre-commit": "bash .githooks/commit-msg",
     "build": "npm run re:build && npm run build:es",
     "re:build": "rescript",
     "re:start": "rescript build -w",
     "re:clean": "rescript clean",
     "re:format": "rescript format -all",
     "build:es": "node build.js",
-    "publish:public": "npm publish --access public"
+    "publish:public": "npm publish --access public",
+    "setup:hooks": "git config core.hooksPath .githooks && chmod +x .githooks/commit-msg",
+    "postinstall": "npm run setup:hooks"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run pre-commit"
+    }
   },
   "dependencies": {
     "@rescript/core": "^0.7.0"
   },
   "devDependencies": {
     "esbuild": "^0.25.0",
-    "rescript": "^11.1.0"
+    "rescript": "^11.1.0",
+    "husky": "^9.1.7"
   },
   "keywords": [
     "rescript",

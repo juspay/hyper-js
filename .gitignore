@@ -1,10 +1,92 @@
+# Dependencies
 node_modules
-*.bs.js
-.merlin
-/lib
-*.bs.js
-.merlin
+
+# Build outputs
+lib/bs
+lib/ocaml
 lib/
-lib/bs/
 lib/*
+.merlin
+
+# ReScript
+.bsb.lock
+*.bs.js
+
+# Package manager lockfiles
+yarn.lock
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Coverage
+coverage/
+
+# Temp
+tmp/
+temp/
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+
+# IDE - JetBrains (IntelliJ, WebStorm, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# IDE - Vim/Neovim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# IDE - Emacs
+\#*\#
+.\#*
+
+# IDE - Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# AI Agents - Cursor
+.cursor/
+.cursorignore
+.cursorindexingignore
+
+# AI Agents - OpenCode
+.opencode/
+
+# AI Agents - GitHub Copilot
+.github/copilot-instructions.md
+
+# AI Agents - Cline / Roo
+.cline/
+.roo/
+.clinerules
+
+# AI Agents - Windsurf
+.windsurfrules
+
+# AI Agents - Claude / Anthropic
+CLAUDE.md
+.claude/
+
+# AI Agents - Aider
+.aider*
+
+# AI Agents - General
+.ai/
+*.aigenerated
