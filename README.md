@@ -76,6 +76,7 @@ The script URL is determined based on your environment and key:
 
 - **Sandbox:** `https://beta.hyperswitch.io/v1/HyperLoader.js`
 - **Production:** `https://checkout.hyperswitch.io/v0/HyperLoader.js`
+- **Production (EU):** `https://eu.hyperswitch.io/sdk/v1/HyperLoader.js` — requires `env: "PROD_EU"` to be set explicitly; the key-prefix fallback does not select the EU stack.
 - **Fallback:** Determines based on the prefix of the provided key (`pk_prd_`).
 
 ## Integration Warnings
