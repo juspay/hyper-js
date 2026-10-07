@@ -700,7 +700,7 @@ declare module "@juspay-tech/hyper-js" {
 
   export interface LoadOptions {
     customBackendUrl?: string;
-    env?: "SANDBOX" | "PROD";
+    env?: "SANDBOX" | "PROD" | "PROD_EU";
     [key: string]: any;
   }
 
